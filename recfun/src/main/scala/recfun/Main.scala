@@ -15,12 +15,19 @@ object Main {
 //      println()
 //    }
 
-    val test = "(if (zero? x) max (/ 1 x))"
-    val test2 = ":-)"
-    val test3 = "())("
-    println(balance(test.toList))
-    println(balance(test2.toList))
-    println(balance(test3.toList))
+//    val test = "(if (zero? x) max (/ 1 x))"
+//    val test2 = ":-)"
+//    val test3 = "())("
+//    println(balance(test.toList))
+//    println(balance(test2.toList))
+//    println(balance(test3.toList))
+
+    println(countChange(4, List(1,2)))
+    println(countChange(4, List(1,2,3)))
+    println(countChange2(4, List(1,2)))
+    println(countChange2(4, List(1,2,3)))
+    println(countChange3(4, List(1,2)))
+    println(countChange3(4, List(1,2,3)))
   }
 
   /**
@@ -66,5 +73,38 @@ object Main {
   /**
    * Exercise 3
    */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+
+  def countChange(money: Int, coins: List[Int]): Int = {
+    (money, coins) match {
+      case (0, _) => 1
+      case (n, _) if n < 0 => 0
+      case (n, Nil) if n >=1 =>0
+      case (n, head::tail) => countChange(n, tail) + countChange(n - head, coins)
+    }
+  }
+
+  /**
+   * Based on http://www.algorithmist.com/index.php/Coin_Change
+   * @param money
+   * @param coins
+   * @return
+   */
+  def countChange2(money: Int, coins: List[Int]): Int = {
+    def count(n: Int, m: Int ): Int = {
+      if (n == 0) 1
+      else if (n < 0) 0
+      else if (m <= 0 && n >= 1) 0
+      else count( n, m - 1 ) + count( n - coins(m -1), m )
+    }
+    count(money, coins.length)
+  }
+
+  def countChange3(money: Int, coins: List[Int]): Int = {
+
+    if (money == 0) 1
+    else if (money < 0) 0
+    else if (coins.isEmpty && money >= 1) 0
+    else countChange3(money, coins.tail) + countChange3(money - coins.head, coins)
+
+  }
 }
